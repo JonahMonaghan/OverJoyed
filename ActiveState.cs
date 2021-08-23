@@ -40,7 +40,7 @@ namespace OverJoyedWINFORM
         int screenWidth = 1920;
         int screenHeight = 1080;
 
-        string Kingdom_Of_Hearts; //Name a Variable points redeemed - used for file reading
+        string configReader;
 
         //Settings booleans
         private bool isActive = false;
@@ -86,10 +86,11 @@ namespace OverJoyedWINFORM
         
         [DllImport("user32.dll")]
         static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        
         [DllImport("user32.dll")]
         static extern bool SetLayeredWindowAttributes(IntPtr hWnd, int crKey, byte alpha, int dwFlags);
 
-        //Top DLL
+        //Top DLL - Keeps OverJoyed above other software
         [DllImport("user32.dll")]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
 
@@ -138,81 +139,72 @@ namespace OverJoyedWINFORM
             Refresh();
         }
 
+        /// <summary>
+        /// A function that directs to the correct calculation method passing the mouse position
+        /// </summary>
+        /// <param name="mouseX">Mouse position on X-axis</param>
+        /// <param name="mouseY">Mouse position on the Y-axis</param>
         private void MouseCheck(int mouseX, int mouseY)
         {
-            /*
-             * Return to origin POC
-            if (mouseX == prevMouseX && mouseY == prevMouseY)
-            {
-                Console.WriteLine("Mouse in identical position");
-                if (reset == true)
-                {
-                    Console.WriteLine("Moving mouse");
-                    inputSimulator.Mouse.MoveMouseTo(xStart, yStart);
-                }
-                else {
-                    reset = true;
-                }
-            }
-            else
-            {
-                reset = false;
-            }*/
+            
+            if (keyCodes.Count > 3 && isActive) //If the config is properly setup and the software is active
+            { 
 
-            if (keyCodes.Count > 3 && isActive) { //Make sure config is available
-
-                if (isZone)
+                if (isZone) //Zone mode is a 3x3 full screen method
                 {
                     CalculateZone(mouseX, mouseY);
                 }
-                else if (isVector && isActive)
+                else if (isVector && isActive) //Vector mode is the control circle method
                 {
                     CalculateVector(mouseX, mouseY);
                 }
             }
         }
 
+        /// <summary>
+        /// A function that reads from the config file and converts each line to the proper mode
+        /// </summary>
         private void AssignKeyCodes()
         {
             
             //NEW STUFF YAY!
             int counter = 0;
             StreamReader file = new StreamReader("config.txt");
-            while ((Kingdom_Of_Hearts = file.ReadLine()) != null)
+            while ((configReader = file.ReadLine()) != null)
             {
-                Kingdom_Of_Hearts = Kingdom_Of_Hearts.ToLower();
-                Console.WriteLine(Kingdom_Of_Hearts);
+                configReader = configReader.ToLower();
+                Console.WriteLine(configReader);
                 VirtualKeyCode code; 
-                strToKey.TryGetValue(Kingdom_Of_Hearts, out code); //Replace Accept with dictionary conversion
+                strToKey.TryGetValue(configReader, out code); //Replace Accept with dictionary conversion
                 if (counter <= 5)
                 {
                     keyCodes.Add(code);
                 }else if(counter == 6)
                 {
-                    if (Kingdom_Of_Hearts == "vector")
+                    if (configReader == "vector")
                     {
                         isVector = true;
                         isZone = false;
-                    }else if (Kingdom_Of_Hearts == "zone")
+                    }else if (configReader == "zone")
                     {
                         isZone = true;
                         isVector = false;
                     }
                 }else if (counter == 7)
                 {
-                    xStart = float.Parse(Kingdom_Of_Hearts);
+                    xStart = float.Parse(configReader);
                 }else if (counter == 8)
                 {
-                    yStart = float.Parse(Kingdom_Of_Hearts);
+                    yStart = float.Parse(configReader);
                 }else if(counter == 9)
                 {
-                    deadZone = float.Parse(Kingdom_Of_Hearts);
+                    deadZone = float.Parse(configReader);
                 }else if (counter == 10)
                 {
-                    returnToCenterLC = bool.Parse(Kingdom_Of_Hearts);
+                    returnToCenterLC = bool.Parse(configReader);
                 }else if (counter == 11)
                 {
-                    returnToCenterRC = bool.Parse(Kingdom_Of_Hearts);
+                    returnToCenterRC = bool.Parse(configReader);
                 }
                 counter++;
             }
