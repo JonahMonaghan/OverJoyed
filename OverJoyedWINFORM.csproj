@@ -60,7 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigClass.cs" />
-    <Compile Include="ScreenDrawer.cs" />
     <Compile Include="Dictionary and Enums.cs" />
     <Compile Include="MouseListener.cs" />
     <Compile Include="ConfigState.cs">
