@@ -31,6 +31,17 @@ namespace OverJoyedWINFORM
             { "space", VirtualKeyCode.SPACE},
             { "lshift", VirtualKeyCode.LSHIFT},
             { "rshift", VirtualKeyCode.RSHIFT},
+            { "lctrl", VirtualKeyCode.LCONTROL},
+            { "rctrl", VirtualKeyCode.RCONTROL},
+            { "tab", VirtualKeyCode.TAB},
+            { "esc", VirtualKeyCode.ESCAPE},
+            { "capslk", VirtualKeyCode.CAPITAL},
+            
+            //Symbols
+            { "comma", VirtualKeyCode.OEM_COMMA},
+            { "period", VirtualKeyCode.OEM_PERIOD},
+            { "plus", VirtualKeyCode.OEM_PLUS},
+            { "minus", VirtualKeyCode.OEM_MINUS},
 
             //Letters
             { "q", VirtualKeyCode.VK_Q},
@@ -59,6 +70,20 @@ namespace OverJoyedWINFORM
             { "b", VirtualKeyCode.VK_B},
             { "n", VirtualKeyCode.VK_N},
             { "m", VirtualKeyCode.VK_M},
+
+            //Function Keys
+            { "f1", VirtualKeyCode.F1},
+            { "f2", VirtualKeyCode.F2},
+            { "f3", VirtualKeyCode.F3},
+            { "f4", VirtualKeyCode.F4},
+            { "f5", VirtualKeyCode.F5},
+            { "f6", VirtualKeyCode.F6},
+            { "f7", VirtualKeyCode.F7},
+            { "f8", VirtualKeyCode.F8},
+            { "f9", VirtualKeyCode.F9},
+            { "f10", VirtualKeyCode.F10},
+            { "f11", VirtualKeyCode.F11},
+            { "f12", VirtualKeyCode.F12},
 
             //Alpha Numbers
             { "alpha1", VirtualKeyCode.VK_1},
