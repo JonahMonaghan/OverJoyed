@@ -9,4 +9,5 @@ OverJoyed is a software that allows people to convert their mouse into keyboard 
 ## Dependencies
 OverJoyed is currently dependant on the following NuGet package(s)
 - GregStacks.InputSimulatorStandard 
+
 If you check-out the code for the first time be sure to use NuGet package restore to have the package installed.
