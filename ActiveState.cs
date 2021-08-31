@@ -18,19 +18,6 @@ using static OverJoyedWINFORM.DictionaryEnums;
 namespace OverJoyedWINFORM
 {
 
-    //inputSimulator.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.VK_A);
-
-    /*KeyCodes Array Explained:
-    * KeyCodes Array Works in this order:
-    * 0: Up
-    * 1: Down
-    * 2: Left
-    * 3: Right
-    * 
-    * If Length > 4:
-    * 4: Up, Left
-    */
-
     public partial class ActiveMode : Form
     {
 
@@ -39,6 +26,7 @@ namespace OverJoyedWINFORM
         //Size values will need to be fetched from config file
         int screenWidth = 1920;
         int screenHeight = 1080;
+        int screenScaling = 100;
 
         string configReader;
 
@@ -115,9 +103,6 @@ namespace OverJoyedWINFORM
 
             AssignKeyCodes();
 
-            xStart = screenWidth / 2;
-            yStart = screenHeight / 2;
-
         }
 
         private void TimerTick(object sender, EventArgs e)
@@ -190,24 +175,41 @@ namespace OverJoyedWINFORM
                         isZone = true;
                         isVector = false;
                     }
-                }else if (counter == 7)
+                }
+                else if (counter == 7)
+                {
+                    screenWidth = int.Parse(configReader);
+                }
+                else if (counter == 8)
+                {
+                    screenHeight = int.Parse(configReader);
+                }
+                else if (counter == 9)
+                {
+                    screenScaling = int.Parse(configReader) / 100;
+                }
+                else if (counter == 10)
                 {
                     xStart = float.Parse(configReader);
-                }else if (counter == 8)
+                }else if (counter == 11)
                 {
                     yStart = float.Parse(configReader);
-                }else if(counter == 9)
+                }else if(counter == 12)
                 {
                     deadZone = float.Parse(configReader);
-                }else if (counter == 10)
+                }else if (counter == 13)
                 {
                     returnToCenterLC = bool.Parse(configReader);
-                }else if (counter == 11)
+                }else if (counter == 14)
                 {
                     returnToCenterRC = bool.Parse(configReader);
                 }
                 counter++;
-            }
+            } 
+            
+            screenWidth = screenWidth / screenScaling;
+            
+            screenHeight = screenHeight / screenScaling;
         }
 
         
@@ -260,34 +262,40 @@ namespace OverJoyedWINFORM
             float _mouseAngle = (float)Math.Atan2((MousePosition.Y - yStart), (MousePosition.X - xStart));
             _mouseAngle = (float)(180 / Math.PI) * _mouseAngle;
 
+
             bool markNextLine = false;
 
             if (_magnitudeX > deadZone || _magnitudeY > deadZone)
             {
-                e.Graphics.DrawEllipse(penA, new RectangleF(screenWidth / 2 - deadZone, screenHeight / 2 - deadZone, deadZone * 2, deadZone * 2));
+                //Rectangle rect = new Rectangle(-16, -39, 120, 120);
+                //e.Graphics.DrawEllipse(penA, rect);
+                e.Graphics.DrawEllipse(penA, new RectangleF(xStart - (deadZone + 16), yStart - (deadZone + 39), deadZone * 2, deadZone * 2));
+                
             }
             else
             {
-                e.Graphics.DrawEllipse(penB, new RectangleF(screenWidth / 2 - deadZone, screenHeight / 2 - deadZone, deadZone * 2, deadZone * 2));
+                e.Graphics.DrawEllipse(penB, new RectangleF(xStart - (deadZone + 16), yStart - (deadZone + 39), deadZone * 2, deadZone * 2));
+                
             }
             
 
             for (float _angle = -157.5f; _angle <= 157.5; _angle += 45f)
             {
-                float _x1 = (float)Math.Sin((float)(Math.PI / 180) * (_angle + 90)) * deadZone + (screenWidth / 2);
-                float _y1 = (float)Math.Cos((float)(Math.PI / 180) * (_angle - 90)) * deadZone + (screenHeight / 2);
+                float _x1 = (float)Math.Sin((float)(Math.PI / 180) * (_angle + 90)) * deadZone + xStart -16;
+                float _y1 = (float)Math.Cos((float)(Math.PI / 180) * (_angle - 90)) * deadZone + yStart - 39;
                 float _x2 = ((float)Math.Cos((float)(Math.PI / 180) * _angle) * 100f) + _x1;
                 float _y2 = ((float)Math.Sin((float)(Math.PI / 180) * _angle) * 100f) + _y1;
 
                 if ((_mouseAngle > _angle && _mouseAngle <= _angle + 45f && (_magnitudeX > deadZone || _magnitudeY > deadZone)) || markNextLine)
                 {
                     e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
+
                     markNextLine = !markNextLine;
 
                     if(_mouseAngle >= 157.5)
                     {
-                       _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * deadZone + (screenWidth / 2);
-                       _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * deadZone + (screenHeight / 2);
+                       _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * deadZone + xStart - 16;
+                       _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * deadZone + yStart - 39;
                        _x2 = ((float)Math.Cos((float)(Math.PI / 180) * -1 * _angle) * 100f) + _x1;
                        _y2 = ((float)Math.Sin((float)(Math.PI / 180) * -1 * _angle) * 100f) + _y1;
                        e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
@@ -299,7 +307,7 @@ namespace OverJoyedWINFORM
                 }
             }
 
-            e.Graphics.DrawRectangle(penC, new Rectangle(new Point((int)xEnd, (int)yEnd), new Size(3, 3)));
+            e.Graphics.DrawRectangle(penC, new Rectangle(new Point((int)xEnd - 16, (int)yEnd - 39), new Size(3, 3)));
 
             //IF - Mouse is within angles, draw that angle at full opacity, else draw with slight transparancy
             
@@ -308,8 +316,8 @@ namespace OverJoyedWINFORM
         void _mouse_OnMousePressed(object sender, MousePressedArgs e)
         {
 
-            xEnd = Cursor.Position.X;
-            yEnd = Cursor.Position.Y;
+            xEnd = System.Windows.Forms.Cursor.Position.X;
+            yEnd = System.Windows.Forms.Cursor.Position.Y;
 
             float _magnitudeX = Math.Abs(xStart - xEnd);
             float _magnitudeY = Math.Abs(yStart - yEnd);
@@ -332,20 +340,37 @@ namespace OverJoyedWINFORM
                 }
                 else if (e.action == 2) //Btn B Down
                 {
-                    inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.B]);
+                    if (returnToCenterRC)
+                    {
+                        if (_magnitudeX < deadZone || _magnitudeY < deadZone)
+                        
+                            {
+                            inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.B]);
+                        }
+
+                    }
+                    else
+                    {
+                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.B]);
+                    }
                 }
                 else if (e.action == 3) //Btn A Up
                 {
                     if (returnToCenterLC)
                     {
-                        Cursor.Position = new Point((int)xStart, (int)yStart);
+                        System.Windows.Forms.Cursor.Position = new Point((int)xStart, (int)yStart);
                     }
                     inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.A]);
                 }
                 else if (e.action == 4) //Btn B Up
                 {
+                    if (returnToCenterRC)
+                    {
+                        System.Windows.Forms.Cursor.Position = new Point((int)xStart, (int)yStart);
+                    }
                     inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.B]);
-                }else if (e.action == 5) //LMOUSE DBLCLK
+                }
+                else if (e.action == 5) //LMOUSE DBLCLK
                 {
                     isActive = !isActive;
                 }
@@ -373,7 +398,8 @@ namespace OverJoyedWINFORM
 
 
             if (_magnitudeX > deadZone || _magnitudeY > deadZone)
-            {
+            
+                {
                 float _angle = (float)Math.Atan2((yEnd - yStart), (xEnd - xStart));
 
                 _angle = (float)(180 / Math.PI) * _angle;
