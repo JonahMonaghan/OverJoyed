@@ -262,34 +262,40 @@ namespace OverJoyedWINFORM
             float _mouseAngle = (float)Math.Atan2((MousePosition.Y - yStart), (MousePosition.X - xStart));
             _mouseAngle = (float)(180 / Math.PI) * _mouseAngle;
 
+
             bool markNextLine = false;
 
             if (_magnitudeX > deadZone || _magnitudeY > deadZone)
             {
-                e.Graphics.DrawEllipse(penA, new RectangleF(xStart - deadZone, yStart - deadZone, deadZone * 2, deadZone * 2));
+                //Rectangle rect = new Rectangle(-16, -39, 120, 120);
+                //e.Graphics.DrawEllipse(penA, rect);
+                e.Graphics.DrawEllipse(penA, new RectangleF(xStart - (deadZone + 16), yStart - (deadZone + 39), deadZone * 2, deadZone * 2));
+                
             }
             else
             {
-                e.Graphics.DrawEllipse(penB, new RectangleF(xStart - deadZone, yStart - deadZone, deadZone * 2, deadZone * 2));
+                e.Graphics.DrawEllipse(penB, new RectangleF(xStart - (deadZone + 16), yStart - (deadZone + 39), deadZone * 2, deadZone * 2));
+                
             }
             
 
             for (float _angle = -157.5f; _angle <= 157.5; _angle += 45f)
             {
-                float _x1 = (float)Math.Sin((float)(Math.PI / 180) * (_angle + 90)) * deadZone + xStart;
-                float _y1 = (float)Math.Cos((float)(Math.PI / 180) * (_angle - 90)) * deadZone + yStart;
+                float _x1 = (float)Math.Sin((float)(Math.PI / 180) * (_angle + 90)) * deadZone + xStart -16;
+                float _y1 = (float)Math.Cos((float)(Math.PI / 180) * (_angle - 90)) * deadZone + yStart - 39;
                 float _x2 = ((float)Math.Cos((float)(Math.PI / 180) * _angle) * 100f) + _x1;
                 float _y2 = ((float)Math.Sin((float)(Math.PI / 180) * _angle) * 100f) + _y1;
 
                 if ((_mouseAngle > _angle && _mouseAngle <= _angle + 45f && (_magnitudeX > deadZone || _magnitudeY > deadZone)) || markNextLine)
                 {
                     e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
+
                     markNextLine = !markNextLine;
 
                     if(_mouseAngle >= 157.5)
                     {
-                       _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * deadZone + xStart;
-                       _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * deadZone + yStart;
+                       _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * deadZone + xStart - 16;
+                       _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * deadZone + yStart - 39;
                        _x2 = ((float)Math.Cos((float)(Math.PI / 180) * -1 * _angle) * 100f) + _x1;
                        _y2 = ((float)Math.Sin((float)(Math.PI / 180) * -1 * _angle) * 100f) + _y1;
                        e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
@@ -301,7 +307,7 @@ namespace OverJoyedWINFORM
                 }
             }
 
-            e.Graphics.DrawRectangle(penC, new Rectangle(new Point((int)xEnd, (int)yEnd), new Size(3, 3)));
+            e.Graphics.DrawRectangle(penC, new Rectangle(new Point((int)xEnd - 16, (int)yEnd - 39), new Size(3, 3)));
 
             //IF - Mouse is within angles, draw that angle at full opacity, else draw with slight transparancy
             
@@ -334,7 +340,19 @@ namespace OverJoyedWINFORM
                 }
                 else if (e.action == 2) //Btn B Down
                 {
-                    inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.B]);
+                    if (returnToCenterRC)
+                    {
+                        if (_magnitudeX < deadZone || _magnitudeY < deadZone)
+                        
+                            {
+                            inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.B]);
+                        }
+
+                    }
+                    else
+                    {
+                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.B]);
+                    }
                 }
                 else if (e.action == 3) //Btn A Up
                 {
@@ -346,8 +364,13 @@ namespace OverJoyedWINFORM
                 }
                 else if (e.action == 4) //Btn B Up
                 {
+                    if (returnToCenterRC)
+                    {
+                        System.Windows.Forms.Cursor.Position = new Point((int)xStart, (int)yStart);
+                    }
                     inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.B]);
-                }else if (e.action == 5) //LMOUSE DBLCLK
+                }
+                else if (e.action == 5) //LMOUSE DBLCLK
                 {
                     isActive = !isActive;
                 }
@@ -375,7 +398,8 @@ namespace OverJoyedWINFORM
 
 
             if (_magnitudeX > deadZone || _magnitudeY > deadZone)
-            {
+            
+                {
                 float _angle = (float)Math.Atan2((yEnd - yStart), (xEnd - xStart));
 
                 _angle = (float)(180 / Math.PI) * _angle;
