@@ -32,6 +32,8 @@
             this.components = new System.ComponentModel.Container();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.pnlDraw = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pnlDraw.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer
@@ -41,12 +43,23 @@
             // pnlDraw
             // 
             this.pnlDraw.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.pnlDraw.Controls.Add(this.label1);
             this.pnlDraw.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlDraw.Location = new System.Drawing.Point(0, 0);
             this.pnlDraw.Name = "pnlDraw";
             this.pnlDraw.Size = new System.Drawing.Size(1904, 1041);
             this.pnlDraw.TabIndex = 0;
             this.pnlDraw.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlDraw_Paint);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(13, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(572, 24);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Press Enter key to activate or deactivate. Have fun using Overjoyed!";
             // 
             // ActiveMode
             // 
@@ -61,6 +74,8 @@
             this.TransparencyKey = System.Drawing.SystemColors.ControlDarkDark;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.pnlDraw.ResumeLayout(false);
+            this.pnlDraw.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -68,6 +83,7 @@
         #endregion
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.Panel pnlDraw;
+        private System.Windows.Forms.Label label1;
     }
 }
 

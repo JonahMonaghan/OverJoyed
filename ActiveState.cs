@@ -250,6 +250,7 @@ namespace OverJoyedWINFORM
             if (_keyHook == "Return")
             {
                 isActive = !isActive;
+                label1.Visible = !label1.Visible;
             }
             
         }
