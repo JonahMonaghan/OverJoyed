@@ -263,6 +263,7 @@ namespace OverJoyedWINFORM
             float _mouseAngle = (float)Math.Atan2((MousePosition.Y - yStart), (MousePosition.X - xStart));
             _mouseAngle = (float)(180 / Math.PI) * _mouseAngle;
 
+            Console.WriteLine(_mouseAngle);
 
             bool markNextLine = false;
 
@@ -292,19 +293,35 @@ namespace OverJoyedWINFORM
                     e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
 
                     markNextLine = !markNextLine;
-
-                    if(_mouseAngle >= 157.5)
-                    {
-                       _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * deadZone + xStart - 16;
-                       _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * deadZone + yStart - 39;
-                       _x2 = ((float)Math.Cos((float)(Math.PI / 180) * -1 * _angle) * 100f) + _x1;
-                       _y2 = ((float)Math.Sin((float)(Math.PI / 180) * -1 * _angle) * 100f) + _y1;
-                       e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
-                    }
                 }
                 else
                 {
                     e.Graphics.DrawLine(penA, _x1, _y1, _x2, _y2);
+                }
+
+                if (_angle == 157.5)
+                {
+                    if (_mouseAngle >= 157.5)
+                    {
+                        _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * deadZone + xStart - 16;
+                        _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * deadZone + yStart - 39;
+                        _x2 = ((float)Math.Cos((float)(Math.PI / 180) * -1 * _angle) * 100f) + _x1;
+                        _y2 = ((float)Math.Sin((float)(Math.PI / 180) * -1 * _angle) * 100f) + _y1;
+                        e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
+                    }
+                    else if (_mouseAngle < -157.5)
+                    {
+                        _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * deadZone + xStart - 16;
+                        _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * deadZone + yStart - 39;
+                        _x2 = ((float)Math.Cos((float)(Math.PI / 180) * -1 * _angle) * 100f) + _x1;
+                        _y2 = ((float)Math.Sin((float)(Math.PI / 180) * -1 * _angle) * 100f) + _y1;
+                        e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
+                        _x1 = (float)Math.Sin((float)(Math.PI / 180) * (_angle + 90)) * deadZone + xStart - 16;
+                        _y1 = (float)Math.Cos((float)(Math.PI / 180) * (_angle - 90)) * deadZone + yStart - 39;
+                        _x2 = ((float)Math.Cos((float)(Math.PI / 180) * _angle) * 100f) + _x1;
+                        _y2 = ((float)Math.Sin((float)(Math.PI / 180) * _angle) * 100f) + _y1;
+                        e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
+                    }
                 }
             }
 
