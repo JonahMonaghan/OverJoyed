@@ -45,7 +45,7 @@ namespace OverJoyedWINFORM
         private float xStart, xEnd, yStart, yEnd; //DONE
 
         //Needs config
-        private float deadZone = 100f;
+        //private float deadZone = 100f;
 
         InputSimulator inputSimulator = new InputSimulator(); //Input Simulator , DONE
 
@@ -108,6 +108,15 @@ namespace OverJoyedWINFORM
                     serializer.Serialize(file, cf);
                 }
             }
+            else
+            {
+                using (StreamReader file = File.OpenText(@"\Configs\Default.json")){
+                    JsonSerializer serializer = new JsonSerializer();
+                    activeConfig = (Config)serializer.Deserialize(file, typeof(Config));
+                }
+            }
+
+
 
             timer.Tick += new EventHandler(TimerTick);
             timer.Interval = 30; //Counts by ms
@@ -147,7 +156,7 @@ namespace OverJoyedWINFORM
         private void MouseCheck(int mouseX, int mouseY)
         {
             
-            if (keyCodes.Count > 3 && isActive) //If the config is properly setup and the software is active
+            if (activeConfig.KeyCodes.Count > 3 && isActive) //If the config is properly setup and the software is active
             { 
 
                 if (isZone) //Zone mode is a 3x3 full screen method
@@ -168,6 +177,7 @@ namespace OverJoyedWINFORM
         {
             
             //NEW STUFF YAY!
+            /*
             int counter = 0;
             StreamReader file = new StreamReader("config.txt");
             while ((configReader = file.ReadLine()) != null)
@@ -205,7 +215,7 @@ namespace OverJoyedWINFORM
                 }
                 else if (counter == 10)
                 {
-                    xStart = float.Parse(configReader);
+                    activeConfig.XStart = float.Parse(configReader);
                 }else if (counter == 11)
                 {
                     yStart = float.Parse(configReader);
@@ -225,6 +235,7 @@ namespace OverJoyedWINFORM
             screenWidth = screenWidth / screenScaling;
             
             screenHeight = screenHeight / screenScaling;
+            */
         }
 
         
@@ -272,37 +283,37 @@ namespace OverJoyedWINFORM
         private void pnlDraw_Paint(object sender, PaintEventArgs e)
         {
             //Console.WriteLine("Drawing UI"); 
-            float _magnitudeX = Math.Abs(MousePosition.X - xStart);
-            float _magnitudeY = Math.Abs(MousePosition.Y - yStart);
-            float _mouseAngle = (float)Math.Atan2((MousePosition.Y - yStart), (MousePosition.X - xStart));
+            float _magnitudeX = Math.Abs(MousePosition.X - activeConfig.XStart);
+            float _magnitudeY = Math.Abs(MousePosition.Y - activeConfig.YStart);
+            float _mouseAngle = (float)Math.Atan2((MousePosition.Y - activeConfig.YStart), (MousePosition.X - activeConfig.XStart));
             _mouseAngle = (float)(180 / Math.PI) * _mouseAngle;
 
             //Console.WriteLine(_mouseAngle);
 
             bool markNextLine = false;
 
-            if (_magnitudeX > deadZone || _magnitudeY > deadZone)
+            if (_magnitudeX > activeConfig.DeadZone || _magnitudeY > activeConfig.DeadZone)
             {
                 //Rectangle rect = new Rectangle(-16, -39, 120, 120);
                 //e.Graphics.DrawEllipse(penA, rect);
-                e.Graphics.DrawEllipse(penA, new RectangleF(xStart - (deadZone + 16), yStart - (deadZone + 39), deadZone * 2, deadZone * 2));
+                e.Graphics.DrawEllipse(penA, new RectangleF(activeConfig.XStart - (activeConfig.DeadZone + 16), activeConfig.YStart - (activeConfig.DeadZone + 39), activeConfig.DeadZone * 2, activeConfig.DeadZone * 2));
                 
             }
             else
             {
-                e.Graphics.DrawEllipse(penB, new RectangleF(xStart - (deadZone + 16), yStart - (deadZone + 39), deadZone * 2, deadZone * 2));
+                e.Graphics.DrawEllipse(penB, new RectangleF(activeConfig.XStart - (activeConfig.DeadZone + 16), activeConfig.YStart - (activeConfig.DeadZone + 39), activeConfig.DeadZone * 2, activeConfig.DeadZone * 2));
                 
             }
             
 
             for (float _angle = -157.5f; _angle <= 157.5; _angle += 45f)
             {
-                float _x1 = (float)Math.Sin((float)(Math.PI / 180) * (_angle + 90)) * deadZone + xStart -16;
-                float _y1 = (float)Math.Cos((float)(Math.PI / 180) * (_angle - 90)) * deadZone + yStart - 39;
+                float _x1 = (float)Math.Sin((float)(Math.PI / 180) * (_angle + 90)) * activeConfig.DeadZone + activeConfig.XStart -16;
+                float _y1 = (float)Math.Cos((float)(Math.PI / 180) * (_angle - 90)) * activeConfig.DeadZone + activeConfig.YStart - 39;
                 float _x2 = ((float)Math.Cos((float)(Math.PI / 180) * _angle) * 100f) + _x1;
                 float _y2 = ((float)Math.Sin((float)(Math.PI / 180) * _angle) * 100f) + _y1;
 
-                if ((_mouseAngle > _angle && _mouseAngle <= _angle + 45f && (_magnitudeX > deadZone || _magnitudeY > deadZone)) || markNextLine)
+                if ((_mouseAngle > _angle && _mouseAngle <= _angle + 45f && (_magnitudeX > activeConfig.DeadZone || _magnitudeY > activeConfig.DeadZone)) || markNextLine)
                 {
                     e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
 
@@ -317,21 +328,21 @@ namespace OverJoyedWINFORM
                 {
                     if (_mouseAngle >= 157.5)
                     {
-                        _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * deadZone + xStart - 16;
-                        _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * deadZone + yStart - 39;
+                        _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * activeConfig.DeadZone + activeConfig.XStart - 16;
+                        _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * activeConfig.DeadZone + activeConfig.YStart - 39;
                         _x2 = ((float)Math.Cos((float)(Math.PI / 180) * -1 * _angle) * 100f) + _x1;
                         _y2 = ((float)Math.Sin((float)(Math.PI / 180) * -1 * _angle) * 100f) + _y1;
                         e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
                     }
                     else if (_mouseAngle < -157.5)
                     {
-                        _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * deadZone + xStart - 16;
-                        _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * deadZone + yStart - 39;
+                        _x1 = (float)Math.Sin((float)(Math.PI / 180) * (-1 * _angle + 90)) * activeConfig.DeadZone + activeConfig.XStart - 16;
+                        _y1 = (float)Math.Cos((float)(Math.PI / 180) * (-1 * _angle - 90)) * activeConfig.DeadZone + activeConfig.YStart - 39;
                         _x2 = ((float)Math.Cos((float)(Math.PI / 180) * -1 * _angle) * 100f) + _x1;
                         _y2 = ((float)Math.Sin((float)(Math.PI / 180) * -1 * _angle) * 100f) + _y1;
                         e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
-                        _x1 = (float)Math.Sin((float)(Math.PI / 180) * (_angle + 90)) * deadZone + xStart - 16;
-                        _y1 = (float)Math.Cos((float)(Math.PI / 180) * (_angle - 90)) * deadZone + yStart - 39;
+                        _x1 = (float)Math.Sin((float)(Math.PI / 180) * (_angle + 90)) * activeConfig.DeadZone + activeConfig.XStart - 16;
+                        _y1 = (float)Math.Cos((float)(Math.PI / 180) * (_angle - 90)) * activeConfig.DeadZone + activeConfig.YStart - 39;
                         _x2 = ((float)Math.Cos((float)(Math.PI / 180) * _angle) * 100f) + _x1;
                         _y2 = ((float)Math.Sin((float)(Math.PI / 180) * _angle) * 100f) + _y1;
                         e.Graphics.DrawLine(penB, _x1, _y1, _x2, _y2);
@@ -351,56 +362,56 @@ namespace OverJoyedWINFORM
             xEnd = System.Windows.Forms.Cursor.Position.X;
             yEnd = System.Windows.Forms.Cursor.Position.Y;
 
-            float _magnitudeX = Math.Abs(xStart - xEnd);
-            float _magnitudeY = Math.Abs(yStart - yEnd);
+            float _magnitudeX = Math.Abs(activeConfig.XStart - xEnd);
+            float _magnitudeY = Math.Abs(activeConfig.YStart - yEnd);
 
             if (isActive)
             {
                 if (e.action == 1) //Btn A Down
                 {
-                    if (returnToCenterLC)
+                    if (activeConfig.RtcLC)
                     {
-                        if (_magnitudeX < deadZone || _magnitudeY < deadZone) {
-                            inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.A]);
+                        if (_magnitudeX < activeConfig.DeadZone || _magnitudeY < activeConfig.DeadZone) {
+                            inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.A]);
                         }
 
                     }
                     else
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.A]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.A]);
                     }
                 }
                 else if (e.action == 2) //Btn B Down
                 {
-                    if (returnToCenterRC)
+                    if (activeConfig.RtcRC)
                     {
-                        if (_magnitudeX < deadZone || _magnitudeY < deadZone)
+                        if (_magnitudeX < activeConfig.DeadZone || _magnitudeY < activeConfig.DeadZone)
                         
                             {
-                            inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.B]);
+                            inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.B]);
                         }
 
                     }
                     else
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.B]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.B]);
                     }
                 }
                 else if (e.action == 3) //Btn A Up
                 {
-                    if (returnToCenterLC)
+                    if (activeConfig.RtcLC)
                     {
-                        System.Windows.Forms.Cursor.Position = new Point((int)xStart, (int)yStart);
+                        System.Windows.Forms.Cursor.Position = new Point((int)activeConfig.XStart, (int)activeConfig.YStart);
                     }
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.A]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.A]);
                 }
                 else if (e.action == 4) //Btn B Up
                 {
-                    if (returnToCenterRC)
+                    if (activeConfig.RtcRC)
                     {
-                        System.Windows.Forms.Cursor.Position = new Point((int)xStart, (int)yStart);
+                        System.Windows.Forms.Cursor.Position = new Point((int)activeConfig.XStart, (int)activeConfig.YStart);
                     }
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.B]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.B]);
                 }
                 else if (e.action == 5) //LMOUSE DBLCLK
                 {
@@ -425,129 +436,129 @@ namespace OverJoyedWINFORM
             xEnd = mouseX;
             yEnd = mouseY;
 
-            float _magnitudeX = Math.Abs(xStart - xEnd);
-            float _magnitudeY = Math.Abs(yStart - yEnd);
+            float _magnitudeX = Math.Abs(activeConfig.XStart - xEnd);
+            float _magnitudeY = Math.Abs(activeConfig.YStart - yEnd);
 
 
-            if (_magnitudeX > deadZone || _magnitudeY > deadZone)
+            if (_magnitudeX > activeConfig.DeadZone || _magnitudeY > activeConfig.DeadZone)
             
                 {
-                float _angle = (float)Math.Atan2((yEnd - yStart), (xEnd - xStart));
+                float _angle = (float)Math.Atan2((yEnd - activeConfig.YStart), (xEnd - activeConfig.XStart));
 
                 _angle = (float)(180 / Math.PI) * _angle;
 
                 if (_angle > -112.5 && _angle <= -67.5)
                 {
-                    if (!CheckKey(keyCodes[(int)directions.up]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.up]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.up]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.up]);
                     }
 
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.down]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.left]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.right]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.down]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.left]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.right]);
 
                     //lblOutput = 
 
                 }
                 else if (_angle > -157.5 && _angle <= -112.5)
                 {
-                    if (!CheckKey(keyCodes[(int)directions.up]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.up]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.up]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.up]);
                     }
 
-                    if (!CheckKey(keyCodes[(int)directions.left]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.left]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.left]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.left]);
                     }
 
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.down]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.right]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.down]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.right]);
                 }
                 else if (_angle > 157.5 || (_angle > -179.999 && _angle <= -157.5)) //FLAGGED MIGHT BE WRONG
                 {
-                    if (!CheckKey(keyCodes[(int)directions.left]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.left]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.left]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.left]);
                     }
 
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.up]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.down]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.right]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.up]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.down]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.right]);
                 }
                 else if (_angle > 112.5 && _angle <= 157.5)
                 {
-                    if (!CheckKey(keyCodes[(int)directions.left]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.left]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.left]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.left]);
                     }
 
-                    if (!CheckKey(keyCodes[(int)directions.down]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.down]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.down]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.down]);
                     }
 
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.right]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.up]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.right]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.up]);
                 }
                 else if (_angle > 67.5 && _angle <= 112.5)
                 {
-                    if (!CheckKey(keyCodes[(int)directions.down]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.down]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.down]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.down]);
                     }
 
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.right]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.up]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.left]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.right]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.up]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.left]);
                 }
                 else if (_angle > 22.5 && _angle <= 67.5)
                 {
-                    if (!CheckKey(keyCodes[(int)directions.down]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.down]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.down]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.down]);
                     }
-                    if (!CheckKey(keyCodes[(int)directions.right]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.right]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.right]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.right]);
                     }
 
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.up]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.left]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.up]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.left]);
                 }
                 else if (_angle > -22.5 && _angle <= 22.5)
                 {
-                    if (!CheckKey(keyCodes[(int)directions.right]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.right]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.right]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.right]);
                     }
 
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.up]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.down]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.left]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.up]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.down]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.left]);
                 }
                 else if (_angle > -67.5 && _angle <= -22.5)
                 {
-                    if (!CheckKey(keyCodes[(int)directions.up]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.up]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.up]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.up]);
                     }
-                    if (!CheckKey(keyCodes[(int)directions.right]))
+                    if (!CheckKey(activeConfig.KeyCodes[(int)directions.right]))
                     {
-                        inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.right]);
+                        inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.right]);
                     }
 
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.down]);
-                    inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.left]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.down]);
+                    inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.left]);
                 }
             }
             else
             {
-                inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.down]);
-                inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.left]);
-                inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.up]);
-                inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.right]);
+                inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.down]);
+                inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.left]);
+                inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.up]);
+                inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.right]);
             }
         }
 
@@ -570,49 +581,49 @@ namespace OverJoyedWINFORM
             yPositive = mouseY > centerH + deadzoneY;
             yNegative = mouseY < centerH - deadzoneY;
 
-            if (yNegative && !CheckKey(keyCodes[(int)directions.up]))
+            if (yNegative && !CheckKey(activeConfig.KeyCodes[(int)directions.up]))
             {
                 //lblOutput.Text = "Up";
-                inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.up]);
+                inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.up]);
             }
 
-            if (yPositive && !CheckKey(keyCodes[(int)directions.down]))
+            if (yPositive && !CheckKey(activeConfig.KeyCodes[(int)directions.down]))
             {
                 //lblOutput.Text = "Down";
-                inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.down]);
+                inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.down]);
             }
 
-            if (xNegative && !CheckKey(keyCodes[(int)directions.left]))
+            if (xNegative && !CheckKey(activeConfig.KeyCodes[(int)directions.left]))
             {
                 //lblOutput.Text = "Left";
-                inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.left]);
+                inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.left]);
             }
 
-            if (xPositive && !CheckKey(keyCodes[(int)directions.right]))
+            if (xPositive && !CheckKey(activeConfig.KeyCodes[(int)directions.right]))
             {
                 //lblOutput.Text = "Right";
-                inputSimulator.Keyboard.KeyDown(keyCodes[(int)directions.right]);
+                inputSimulator.Keyboard.KeyDown(activeConfig.KeyCodes[(int)directions.right]);
             }
 
             //Release Keys when needed
             if (!xPositive)
             {
-                inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.right]);
+                inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.right]);
             }
 
             if (!xNegative)
             {
-                inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.left]);
+                inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.left]);
             }
 
             if (!yPositive)
             {
-                inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.down]);
+                inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.down]);
             }
 
             if (!yNegative)
             {
-                inputSimulator.Keyboard.KeyUp(keyCodes[(int)directions.up]);
+                inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.up]);
             }
         }
 
