@@ -30,26 +30,19 @@ namespace OverJoyedWINFORM
         int screenHeight = 1080;
         int screenScaling = 100;
 
-        string configReader;
-
         //Settings booleans
         private bool isActive = false;
 
         //Zone booleans
         private bool isZone = false;
 
-        //Vector booleans
-        private bool isVector = true;
-
         //Vector variables
-        private float xStart, xEnd, yStart, yEnd; //DONE
+        private float xEnd, yEnd; //DONE
 
         //Needs config
         //private float deadZone = 100f;
 
         InputSimulator inputSimulator = new InputSimulator(); //Input Simulator , DONE
-
-        List<VirtualKeyCode> keyCodes = new List<VirtualKeyCode>(); //DONE
 
         private LowLevelKeyboardListener _listener; //Keyboard Hook, DONE
 
@@ -58,9 +51,6 @@ namespace OverJoyedWINFORM
         //Previous mouse positions
         private int prevMouseX, prevMouseY;
         private bool posix; //was bool reset
-
-        //Return to Center Bool
-        private bool returnToCenterLC, returnToCenterRC;
 
         private bool mouseCalc = true;
 
@@ -97,6 +87,12 @@ namespace OverJoyedWINFORM
         {
             InitializeComponent();
 
+            /*
+             * As noted right now, the file check is on Default.json
+             * Want to change to string passed from ConfigBuilder eventually
+             * Blocked by creation of ConfigBuilder
+             */
+
             if (!File.Exists(@"\Configs\Default.json"))
             {
                 Config cf = new Config();
@@ -113,10 +109,11 @@ namespace OverJoyedWINFORM
                 using (StreamReader file = File.OpenText(@"\Configs\Default.json")){
                     JsonSerializer serializer = new JsonSerializer();
                     activeConfig = (Config)serializer.Deserialize(file, typeof(Config));
+                    /*
+                     * Insert test if activeConfig variables are acceptable here
+                     */
                 }
             }
-
-
 
             timer.Tick += new EventHandler(TimerTick);
             timer.Interval = 30; //Counts by ms
@@ -124,8 +121,6 @@ namespace OverJoyedWINFORM
             timer.Start(); //Start the timer
 
             this.Paint += this.pnlDraw_Paint;
-
-            AssignKeyCodes();
 
         }
 
@@ -163,82 +158,12 @@ namespace OverJoyedWINFORM
                 {
                     CalculateZone(mouseX, mouseY);
                 }
-                else if (isVector && isActive) //Vector mode is the control circle method
+                else if (activeConfig.IsVector && isActive) //Vector mode is the control circle method
                 {
                     CalculateVector(mouseX, mouseY);
                 }
             }
         }
-
-        /// <summary>
-        /// A function that reads from the config file and converts each line to the proper mode
-        /// </summary>
-        private void AssignKeyCodes()
-        {
-            
-            //NEW STUFF YAY!
-            /*
-            int counter = 0;
-            StreamReader file = new StreamReader("config.txt");
-            while ((configReader = file.ReadLine()) != null)
-            {
-                configReader = configReader.ToLower();
-                Console.WriteLine(configReader);
-                VirtualKeyCode code; 
-                strToKey.TryGetValue(configReader, out code); //Replace Accept with dictionary conversion
-                if (counter <= 5)
-                {
-                    keyCodes.Add(code);
-                }else if(counter == 6)
-                {
-                    if (configReader == "vector")
-                    {
-                        isVector = true;
-                        isZone = false;
-                    }else if (configReader == "zone")
-                    {
-                        isZone = true;
-                        isVector = false;
-                    }
-                }
-                else if (counter == 7)
-                {
-                    screenWidth = int.Parse(configReader);
-                }
-                else if (counter == 8)
-                {
-                    screenHeight = int.Parse(configReader);
-                }
-                else if (counter == 9)
-                {
-                    screenScaling = int.Parse(configReader) / 100;
-                }
-                else if (counter == 10)
-                {
-                    activeConfig.XStart = float.Parse(configReader);
-                }else if (counter == 11)
-                {
-                    yStart = float.Parse(configReader);
-                }else if(counter == 12)
-                {
-                    deadZone = float.Parse(configReader);
-                }else if (counter == 13)
-                {
-                    returnToCenterLC = bool.Parse(configReader);
-                }else if (counter == 14)
-                {
-                    returnToCenterRC = bool.Parse(configReader);
-                }
-                counter++;
-            } 
-            
-            screenWidth = screenWidth / screenScaling;
-            
-            screenHeight = screenHeight / screenScaling;
-            */
-        }
-
-        
 
         private void Form1_Load(object sender, EventArgs e)
         {
