@@ -39,9 +39,6 @@ namespace OverJoyedWINFORM
         //Vector variables
         private float xEnd, yEnd; //DONE
 
-        //Needs config
-        //private float deadZone = 100f;
-
         InputSimulator inputSimulator = new InputSimulator(); //Input Simulator , DONE
 
         private LowLevelKeyboardListener _listener; //Keyboard Hook, DONE
@@ -95,6 +92,7 @@ namespace OverJoyedWINFORM
 
             if (!File.Exists(@"\Configs\Default.json"))
             {
+                Console.WriteLine("File not found!");
                 Config cf = new Config();
                 activeConfig = cf;
                 using (StreamWriter file = File.CreateText(@"Configs\" + cf.Name + ".json"))
@@ -106,6 +104,7 @@ namespace OverJoyedWINFORM
             }
             else
             {
+                Console.WriteLine("File found!");
                 using (StreamReader file = File.OpenText(@"\Configs\Default.json")){
                     JsonSerializer serializer = new JsonSerializer();
                     activeConfig = (Config)serializer.Deserialize(file, typeof(Config));
@@ -276,16 +275,14 @@ namespace OverJoyedWINFORM
             }
 
             e.Graphics.DrawRectangle(penC, new Rectangle(new Point((int)xEnd - 16, (int)yEnd - 39), new Size(3, 3)));
-
-            //IF - Mouse is within angles, draw that angle at full opacity, else draw with slight transparancy
             
         }
 
         void _mouse_OnMousePressed(object sender, MousePressedArgs e)
         {
 
-            xEnd = System.Windows.Forms.Cursor.Position.X;
-            yEnd = System.Windows.Forms.Cursor.Position.Y;
+            xEnd = Cursor.Position.X;
+            yEnd = Cursor.Position.Y;
 
             float _magnitudeX = Math.Abs(activeConfig.XStart - xEnd);
             float _magnitudeY = Math.Abs(activeConfig.YStart - yEnd);
@@ -326,7 +323,7 @@ namespace OverJoyedWINFORM
                 {
                     if (activeConfig.RtcLC)
                     {
-                        System.Windows.Forms.Cursor.Position = new Point((int)activeConfig.XStart, (int)activeConfig.YStart);
+                        Cursor.Position = new Point((int)activeConfig.XStart, (int)activeConfig.YStart);
                     }
                     inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.A]);
                 }
@@ -334,7 +331,7 @@ namespace OverJoyedWINFORM
                 {
                     if (activeConfig.RtcRC)
                     {
-                        System.Windows.Forms.Cursor.Position = new Point((int)activeConfig.XStart, (int)activeConfig.YStart);
+                        Cursor.Position = new Point((int)activeConfig.XStart, (int)activeConfig.YStart);
                     }
                     inputSimulator.Keyboard.KeyUp(activeConfig.KeyCodes[(int)directions.B]);
                 }

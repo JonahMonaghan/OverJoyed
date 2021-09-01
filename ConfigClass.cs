@@ -91,6 +91,27 @@ namespace OverJoyedWINFORM
             RtcLC = false;
             RtcRC = false;
         }
+
+        public Config(string n, List<int> lst)
+        {
+            KeyCodes = new List<VirtualKeyCode>();
+
+            Name = n;
+            foreach (int i in lst)
+            {
+                KeyCodes.Add((VirtualKeyCode)i);
+            }
+            ScreenWidth = 1920;
+            ScreenHeight = 1080;
+            ScreenScaling = 100;
+            IsVector = true;
+            XStart = Screen.PrimaryScreen.Bounds.Width / 2;
+            YStart = Screen.PrimaryScreen.Bounds.Height / 2;
+            DeadZone = 100f;
+            RtcLC = false;
+            RtcRC = false;
+        }
+
         public Config(string n, List<string> lst, int sW, int sH, int sS)
         {
             KeyCodes = new List<VirtualKeyCode>();
@@ -112,7 +133,27 @@ namespace OverJoyedWINFORM
             RtcLC = false;
             RtcRC = false;
         }
-        
+
+        public Config(string n, List<int> lst, int sW, int sH, int sS)
+        {
+            KeyCodes = new List<VirtualKeyCode>();
+
+            Name = n;
+            foreach (int i in lst)
+            {
+                KeyCodes.Add((VirtualKeyCode)i);
+            }
+            ScreenWidth = sW;
+            ScreenHeight = sH;
+            ScreenScaling = sS;
+            IsVector = true;
+            XStart = Screen.PrimaryScreen.Bounds.Width / 2;
+            YStart = Screen.PrimaryScreen.Bounds.Height / 2;
+            DeadZone = 100f;
+            RtcLC = false;
+            RtcRC = false;
+        }
+
         public Config(string n, List<string> lst, int sW, int sH, int sS, bool iV)
         {
             KeyCodes = new List<VirtualKeyCode>();
@@ -123,6 +164,26 @@ namespace OverJoyedWINFORM
             {
                 strToKey.TryGetValue(s, out code);
                 KeyCodes.Add(code);
+            }
+            ScreenWidth = sW;
+            ScreenHeight = sH;
+            ScreenScaling = sS;
+            IsVector = iV;
+            XStart = Screen.PrimaryScreen.Bounds.Width / 2;
+            YStart = Screen.PrimaryScreen.Bounds.Height / 2;
+            DeadZone = 100f;
+            RtcLC = false;
+            RtcRC = false;
+        }
+
+        public Config(string n, List<int> lst, int sW, int sH, int sS, bool iV)
+        {
+            KeyCodes = new List<VirtualKeyCode>();
+
+            Name = n;
+            foreach (int i in lst)
+            {
+                KeyCodes.Add((VirtualKeyCode)i);
             }
             ScreenWidth = sW;
             ScreenHeight = sH;
@@ -154,6 +215,23 @@ namespace OverJoyedWINFORM
             RtcRC = false;
         }
 
+        public Config(string n, List<int> lst, bool iV, float xS, float yS, float dZ)
+        {
+            KeyCodes = new List<VirtualKeyCode>();
+
+            Name = n;
+            foreach (int i in lst)
+            {
+                KeyCodes.Add((VirtualKeyCode)i);
+            }
+            IsVector = iV;
+            XStart = xS;
+            YStart = yS;
+            DeadZone = dZ;
+            RtcLC = false;
+            RtcRC = false;
+        }
+
         public Config(string n, List<string> lst, bool iV, float xS, float yS, float dZ, bool l, bool r)
         {
             KeyCodes = new List<VirtualKeyCode>();
@@ -173,6 +251,23 @@ namespace OverJoyedWINFORM
             RtcRC = r;
         }
 
+        public Config(string n, List<int> lst, bool iV, float xS, float yS, float dZ, bool l, bool r)
+        {
+            KeyCodes = new List<VirtualKeyCode>();
+
+            Name = n;
+            foreach (int i in lst)
+            {
+                KeyCodes.Add((VirtualKeyCode)i);
+            }
+            IsVector = iV;
+            XStart = xS;
+            YStart = yS;
+            DeadZone = dZ;
+            RtcLC = l;
+            RtcRC = r;
+        }
+
         public Config(string n, List<string> lst, bool iV, float xS, float yS, float dZ, bool l, bool r, Config c)
         {
             KeyCodes = new List<VirtualKeyCode>();
@@ -183,6 +278,25 @@ namespace OverJoyedWINFORM
             {
                 strToKey.TryGetValue(s, out code);
                 KeyCodes.Add(code);
+            }
+            IsVector = iV;
+            XStart = xS;
+            YStart = yS;
+            DeadZone = dZ;
+            RtcLC = l;
+            RtcRC = r;
+            SwitchConfig = true;
+            AltConfig = c;
+        }
+
+        public Config(string n, List<int> lst, bool iV, float xS, float yS, float dZ, bool l, bool r, Config c)
+        {
+            KeyCodes = new List<VirtualKeyCode>();
+
+            Name = n;
+            foreach (int i in lst)
+            {
+                KeyCodes.Add((VirtualKeyCode)i);
             }
             IsVector = iV;
             XStart = xS;

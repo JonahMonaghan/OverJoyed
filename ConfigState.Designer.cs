@@ -396,18 +396,18 @@
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
-            // Form2
+            // ConfigState
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(791, 327);
+            this.ClientSize = new System.Drawing.Size(787, 323);
             this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.pnlOrigin);
             this.Controls.Add(this.pnlDeadzone);
             this.Controls.Add(this.pnlClicks);
             this.Controls.Add(this.pnlDirections);
             this.Controls.Add(this.pnlProfiles);
-            this.Name = "Form2";
+            this.Name = "ConfigState";
             this.Text = "New Config";
             this.Load += new System.EventHandler(this.Form2_Load);
             this.pnlProfiles.ResumeLayout(false);
