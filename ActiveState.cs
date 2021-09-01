@@ -13,6 +13,8 @@ using GregsStack.InputSimulatorStandard.Native;
 using GregsStack.InputSimulatorStandard;
 using System.Runtime.InteropServices;
 using System.IO;
+using Newtonsoft.Json;
+
 using static OverJoyedWINFORM.DictionaryEnums;
 
 namespace OverJoyedWINFORM
@@ -94,6 +96,19 @@ namespace OverJoyedWINFORM
         public ActiveMode()
         {
             InitializeComponent();
+
+            if (!File.Exists(@"\Configs\Default.json"))
+            {
+                Config cf = new Config();
+                activeConfig = cf;
+                using (StreamWriter file = File.CreateText(@"Configs\" + cf.Name + ".json"))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.Formatting = Formatting.Indented;
+                    serializer.Serialize(file, cf);
+                }
+            }
+
             timer.Tick += new EventHandler(TimerTick);
             timer.Interval = 30; //Counts by ms
             timer.Enabled = true; //Ensure that the timer is enabled
@@ -262,7 +277,7 @@ namespace OverJoyedWINFORM
             float _mouseAngle = (float)Math.Atan2((MousePosition.Y - yStart), (MousePosition.X - xStart));
             _mouseAngle = (float)(180 / Math.PI) * _mouseAngle;
 
-            Console.WriteLine(_mouseAngle);
+            //Console.WriteLine(_mouseAngle);
 
             bool markNextLine = false;
 
