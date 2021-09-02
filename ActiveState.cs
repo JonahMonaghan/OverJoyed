@@ -89,8 +89,11 @@ namespace OverJoyedWINFORM
              * Want to change to string passed from ConfigBuilder eventually
              * Blocked by creation of ConfigBuilder
              */
+            VirtualKeyCode test;
+            strToKey.TryGetValue("up", out test);
+            Console.WriteLine(test);
 
-            if (!File.Exists(@"\Configs\Default.json"))
+            if (!File.Exists(@"Configs\Default.json"))
             {
                 Console.WriteLine("File not found!");
                 Config cf = new Config();
@@ -105,7 +108,7 @@ namespace OverJoyedWINFORM
             else
             {
                 Console.WriteLine("File found!");
-                using (StreamReader file = File.OpenText(@"\Configs\Default.json")){
+                using (StreamReader file = File.OpenText(@"Configs\Default.json")){
                     JsonSerializer serializer = new JsonSerializer();
                     activeConfig = (Config)serializer.Deserialize(file, typeof(Config));
                     /*
