@@ -8,19 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using GregsStack.InputSimulatorStandard.Native;
+using Newtonsoft.Json;
 
 namespace OverJoyedWINFORM
 {
     public partial class ConfigState : Form
     {
 
-        string[] directions = new string[4];
-        string[] buttons = new string[2];
-        string[] buttonsRTC = new string[2];
+        string name = "test";
+        int[] keys = new int[6];
+        bool[] buttonsRTC = new bool[2];
         int originX, originY;
         int deadzoneSize;
+        int screenScaling;
 
-        string stellaris; //passedValue
+        VirtualKeyCode passedValue;
 
         int currentInputID;
 
@@ -96,7 +99,7 @@ namespace OverJoyedWINFORM
         private void btnSubmit_Click(object sender, EventArgs e)
         {
 
-            if (!Int32.TryParse(txtOriginX.Text, out originX))
+            /*if (!Int32.TryParse(txtOriginX.Text, out originX))
             {
                 Console.WriteLine("Origin X value is wrong.");
             }
@@ -143,9 +146,19 @@ namespace OverJoyedWINFORM
                 file.WriteLine(deadzoneSize);
                 file.WriteLine(chkReturnLC.Checked);
                 file.WriteLine(chkReturnRC.Checked);
+                
 
+            }*/
+
+            List<int> tmpLst = keys.ToList<int>();
+            Config cf = new Config(name, tmpLst, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 100, true, Screen.PrimaryScreen.Bounds.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2, deadzoneSize, buttonsRTC[0], buttonsRTC[1]);
+
+            using (StreamWriter file = File.CreateText(@"Configs\" + cf.Name + ".json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Formatting = Formatting.Indented;
+                serializer.Serialize(file, cf);
             }
-
 
         }
 
@@ -154,26 +167,26 @@ namespace OverJoyedWINFORM
             if (isListening)
             {
                 ToggleForm(true);
-                stellaris = e.KeyPressed.ToString();
+                passedValue = (VirtualKeyCode)e.KeyPressed;
                 switch (currentInputID)
                 {
                     case 1:
-                        directions[0] = stellaris;
+                        keys[0] = (int)passedValue;
                         break;
                     case 2:
-                        directions[1] = stellaris;
+                        keys[1] = (int)passedValue;
                         break;
                     case 3:
-                        directions[2] = stellaris;
+                        keys[2] = (int)passedValue;
                         break;
                     case 4:
-                        directions[3] = stellaris;
+                        keys[3] = (int)passedValue;
                         break;
                     case 5:
-                        buttons[0] = stellaris;
+                        keys[4] = (int)passedValue;
                         break;
                     case 6:
-                        buttons[1] = stellaris;
+                        keys[5] = (int)passedValue;
                         break;
 
                     default:
@@ -197,12 +210,12 @@ namespace OverJoyedWINFORM
 
         void UpdateButtonText()
         {
-            btnUp.Text = directions[0];
-            btnDown.Text = directions[1];
-            btnLeft.Text = directions[2];
-            btnRight.Text = directions[3];
-            btnLC.Text = buttons[0];
-            btnRC.Text = buttons[1];
+            btnUp.Text = keys[0].ToString();
+            btnDown.Text = keys[1].ToString();
+            btnLeft.Text = keys[2].ToString();
+            btnRight.Text = keys[3].ToString();
+            btnLC.Text = keys[4].ToString();
+            btnRC.Text = keys[5].ToString();
         }
 
     }

@@ -16,7 +16,7 @@ namespace OverJoyedWINFORM
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ActiveMode());
+            Application.Run(new ConfigState());
         }
     }
 }

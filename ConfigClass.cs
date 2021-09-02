@@ -196,7 +196,7 @@ namespace OverJoyedWINFORM
             RtcRC = false;
         }
 
-        public Config(string n, List<string> lst, bool iV, float xS, float yS, float dZ)
+        public Config(string n, List<string> lst, int sW, int sH, int sS, bool iV, float xS, float yS, float dZ)
         {
             KeyCodes = new List<VirtualKeyCode>();
 
@@ -207,6 +207,9 @@ namespace OverJoyedWINFORM
                 strToKey.TryGetValue(s, out code);
                 KeyCodes.Add(code);
             }
+            ScreenWidth = sW;
+            ScreenHeight = sH;
+            ScreenScaling = sS;
             IsVector = iV;
             XStart = xS;
             YStart = yS;
@@ -215,7 +218,7 @@ namespace OverJoyedWINFORM
             RtcRC = false;
         }
 
-        public Config(string n, List<int> lst, bool iV, float xS, float yS, float dZ)
+        public Config(string n, List<int> lst, int sW, int sH, int sS, bool iV, float xS, float yS, float dZ)
         {
             KeyCodes = new List<VirtualKeyCode>();
 
@@ -224,6 +227,9 @@ namespace OverJoyedWINFORM
             {
                 KeyCodes.Add((VirtualKeyCode)i);
             }
+            ScreenWidth = sW;
+            ScreenHeight = sH;
+            ScreenScaling = sS;
             IsVector = iV;
             XStart = xS;
             YStart = yS;
@@ -232,7 +238,7 @@ namespace OverJoyedWINFORM
             RtcRC = false;
         }
 
-        public Config(string n, List<string> lst, bool iV, float xS, float yS, float dZ, bool l, bool r)
+        public Config(string n, List<string> lst, int sW, int sH, int sS, bool iV, float xS, float yS, float dZ, bool l, bool r)
         {
             KeyCodes = new List<VirtualKeyCode>();
 
@@ -243,6 +249,9 @@ namespace OverJoyedWINFORM
                 strToKey.TryGetValue(s, out code);
                 KeyCodes.Add(code);
             }
+            ScreenWidth = sW;
+            ScreenHeight = sH;
+            ScreenScaling = sS;
             IsVector = iV;
             XStart = xS;
             YStart = yS;
@@ -251,7 +260,7 @@ namespace OverJoyedWINFORM
             RtcRC = r;
         }
 
-        public Config(string n, List<int> lst, bool iV, float xS, float yS, float dZ, bool l, bool r)
+        public Config(string n, List<int> lst, int sW, int sH, int sS, bool iV, float xS, float yS, float dZ, bool l, bool r)
         {
             KeyCodes = new List<VirtualKeyCode>();
 
@@ -260,6 +269,9 @@ namespace OverJoyedWINFORM
             {
                 KeyCodes.Add((VirtualKeyCode)i);
             }
+            ScreenWidth = sW;
+            ScreenHeight = sH;
+            ScreenScaling = sS;
             IsVector = iV;
             XStart = xS;
             YStart = yS;
@@ -268,7 +280,7 @@ namespace OverJoyedWINFORM
             RtcRC = r;
         }
 
-        public Config(string n, List<string> lst, bool iV, float xS, float yS, float dZ, bool l, bool r, Config c)
+        public Config(string n, List<string> lst, int sW, int sH, int sS, bool iV, float xS, float yS, float dZ, bool l, bool r, Config c)
         {
             KeyCodes = new List<VirtualKeyCode>();
 
@@ -279,6 +291,9 @@ namespace OverJoyedWINFORM
                 strToKey.TryGetValue(s, out code);
                 KeyCodes.Add(code);
             }
+            ScreenWidth = sW;
+            ScreenHeight = sH;
+            ScreenScaling = sS;
             IsVector = iV;
             XStart = xS;
             YStart = yS;
@@ -289,7 +304,7 @@ namespace OverJoyedWINFORM
             AltConfig = c;
         }
 
-        public Config(string n, List<int> lst, bool iV, float xS, float yS, float dZ, bool l, bool r, Config c)
+        public Config(string n, List<int> lst, int sW, int sH, int sS, bool iV, float xS, float yS, float dZ, bool l, bool r, Config c)
         {
             KeyCodes = new List<VirtualKeyCode>();
 
@@ -298,6 +313,9 @@ namespace OverJoyedWINFORM
             {
                 KeyCodes.Add((VirtualKeyCode)i);
             }
+            ScreenWidth = sW;
+            ScreenHeight = sH;
+            ScreenScaling = sS;
             IsVector = iV;
             XStart = xS;
             YStart = yS;
