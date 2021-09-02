@@ -48,52 +48,42 @@ namespace OverJoyedWINFORM
 
         }
 
-        private void btnUp_Click(object sender, EventArgs e)
+        private void KeyButtonClick(Button sender, int id)
         {
             isListening = true;
-            btnUp.Text = "Waiting for Input";
+            sender.Text = "Waiting for Input";
             ToggleForm(false);
-            currentInputID = 1;
+            currentInputID = id;
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            KeyButtonClick(btnUp, 1);
         }
 
         private void btnDown_Click(object sender, EventArgs e)
         {
-            isListening = true;
-            btnDown.Text = "Waiting for Input";
-            ToggleForm(false);
-            currentInputID = 2;
+            KeyButtonClick(btnDown, 2);
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
         {
-            isListening = true;
-            btnLeft.Text = "Waiting for Input";
-            ToggleForm(false);
-            currentInputID = 3;
+            KeyButtonClick(btnLeft, 3);
         }
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            isListening = true;
-            btnRight.Text = "Waiting for Input";
-            ToggleForm(false);
-            currentInputID = 4;
+            KeyButtonClick(btnRight, 4);
         }
 
         private void btnLC_Click(object sender, EventArgs e)
         {
-            isListening = true;
-            btnLC.Text = "Waiting for Input";
-            ToggleForm(false);
-            currentInputID = 5;
+            KeyButtonClick(btnLC, 5);
         }
 
         private void btnRC_Click(object sender, EventArgs e)
         {
-            isListening = true;
-            btnRC.Text = "Waiting for Input";
-            ToggleForm(false);
-            currentInputID = 6;
+            KeyButtonClick(btnRC, 6);
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
