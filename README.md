@@ -13,3 +13,6 @@ OverJoyed is currently dependant on the following NuGet package(s)
 - GregStacks.InputSimulatorStandard 
 
 If you check-out the code for the first time be sure to use NuGet package restore to have the package installed.
+
+## Contact
+If you need to contact us please fill out our contact form and we'll respond to your query as soon as we can: https://docs.google.com/forms/d/1UVtUap59Ih3uTIkyBZLHsiHyhocu0IUV-sTCHPJ-beY/edit
